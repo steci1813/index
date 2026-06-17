@@ -1618,6 +1618,131 @@
       }
     }
 
+
+    /* FIX ALIGNEMENT PROGRAMME */
+    .timeline-item .timeline-dot{
+      grid-column:2 / 3;
+      grid-row:1;
+      align-self:center;
+      justify-self:center;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-card{
+      grid-column:1 / 2;
+      grid-row:1;
+      text-align:right;
+    }
+
+    .timeline-item:nth-child(even) .timeline-card{
+      grid-column:3 / 4;
+      grid-row:1;
+      text-align:left;
+    }
+
+    @media (max-width:1024px){
+      .timeline-item .timeline-dot{
+        grid-column:1 / 2;
+        grid-row:1;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-card,
+      .timeline-item:nth-child(even) .timeline-card,
+      .timeline-card{
+        grid-column:2 / 3;
+        grid-row:1;
+        text-align:left;
+      }
+    }
+
+
+    /* FIX MOBILE PROGRAMME - alignement chiffres/cartes */
+    @media (max-width:1024px){
+      .timeline{
+        gap:16px;
+      }
+
+      .timeline::before{
+        left:27px;
+        transform:none;
+      }
+
+      .timeline-item{
+        display:grid;
+        grid-template-columns:54px minmax(0, 1fr);
+        gap:14px;
+        align-items:start;
+      }
+
+      .timeline-item .timeline-dot{
+        grid-column:1 / 2 !important;
+        grid-row:1 !important;
+        width:46px;
+        height:46px;
+        margin:0 auto;
+        align-self:start;
+        justify-self:center;
+        transform:none;
+        font-size:.92rem;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-card,
+      .timeline-item:nth-child(even) .timeline-card,
+      .timeline-item .timeline-card{
+        grid-column:2 / 3 !important;
+        grid-row:1 !important;
+        text-align:left !important;
+        margin:0;
+        align-self:start;
+      }
+
+      .timeline-card{
+        padding:16px 17px;
+      }
+
+      .timeline-card h3{
+        line-height:1.08;
+        margin-bottom:6px;
+      }
+    }
+
+    @media (max-width:640px){
+      .timeline-shell{
+        padding:20px 12px;
+      }
+
+      .timeline{
+        gap:14px;
+      }
+
+      .timeline::before{
+        left:24px;
+      }
+
+      .timeline-item{
+        grid-template-columns:48px minmax(0, 1fr);
+        gap:12px;
+      }
+
+      .timeline-item .timeline-dot{
+        width:42px;
+        height:42px;
+        font-size:.86rem;
+      }
+
+      .timeline-card{
+        padding:15px 15px;
+        border-radius:18px;
+      }
+
+      .timeline-card h3{
+        font-size:1.35rem;
+      }
+
+      .timeline-card p{
+        font-size:.9rem;
+      }
+    }
+
   </style>
 </head>
 
@@ -1701,7 +1826,7 @@
 
           <div class="hero-badges">
             <div class="badge">18-09-2026</div>
-            <div class="badge" data-i18n="hero_time">10h00 du matin</div>
+            <div class="badge" data-i18n="hero_time">9h00 du matin</div>
             <div class="badge">Les Colonnades</div>
           </div>
 
@@ -2076,7 +2201,7 @@
           <h3>Les Colonnades</h3>
 
           <p data-i18n-html="place_text_1">
-            La cérémonie débutera à <strong>10h00 du matin</strong> à l’espace
+            La cérémonie débutera à <strong>9h00 du matin</strong> à l’espace
             <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.
           </p>
 
@@ -2201,7 +2326,7 @@
     }
 
     /* COUNTDOWN */
-    const weddingDate = new Date("2026-09-18T10:00:00").getTime();
+    const weddingDate = new Date("2026-09-18T09:00:00").getTime();
 
     function updateCountdown(){
       const now = new Date().getTime();
@@ -2262,7 +2387,7 @@
         hero_mini: "And on this beautiful day",
         hero_subtitle: "Say yes under the stars",
         hero_text: "Nos étoiles se sont alignées… et elles nous mènent à ce jour unique. Nous serions heureux de vous avoir à nos côtés le <strong>18 septembre 2026</strong> à l’espace <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
-        hero_time: "10h00 du matin",
+        hero_time: "9h00 du matin",
         hero_confirm: "Je confirme ma présence",
         hero_location: "Voir le lieu",
 
@@ -2315,7 +2440,7 @@
         place_eyebrow: "Where the story continues",
         place_title: "Le lieu de réception",
         place_subtitle: "Nous avons hâte de vous retrouver pour célébrer ce jour si spécial.",
-        place_text_1: "La cérémonie débutera à <strong>10h00 du matin</strong> à l’espace <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
+        place_text_1: "La cérémonie débutera à <strong>9h00 du matin</strong> à l’espace <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
         place_text_2: "Merci d’arriver un peu en avance pour profiter pleinement du début de la journée.",
         maps_btn: "Voir sur Maps",
         calendar_btn: "Ajouter au calendrier",
@@ -2346,7 +2471,7 @@
         hero_mini: "Amin’ity andro mahafinaritra ity",
         hero_subtitle: "Hiteny eny ambanin’ny kintana",
         hero_text: "Nifanaraka ny kintanay… ary mitondra anay ho amin’ity andro tokana ity. Faly izahay raha ho eo anilanay ianao amin’ny <strong>18 septambra 2026</strong> ao amin’ny <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
-        hero_time: "10 ora maraina",
+        hero_time: "9 ora maraina",
         hero_confirm: "Manamafy ny fahatongavako",
         hero_location: "Hijery ny toerana",
 
@@ -2399,7 +2524,7 @@
         place_eyebrow: "Toerana hitohizan’ny tantara",
         place_title: "Toerana handraisana",
         place_subtitle: "Tsy andrinay ny hihaona aminareo hankalaza ity andro manokana ity.",
-        place_text_1: "Hanomboka amin’ny <strong>10 ora maraina</strong> ny lanonana ao amin’ny <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
+        place_text_1: "Hanomboka amin’ny <strong>9 ora maraina</strong> ny lanonana ao amin’ny <strong>Les Colonnades</strong>, sortie village Manandona, By Pass côté Iavoloha.",
         place_text_2: "Azafady tongava mialoha kely mba hahafahana mankafy tsara ny fiandohan’ny andro.",
         maps_btn: "Hijery amin’ny Maps",
         calendar_btn: "Ampidirina amin’ny kalandrie",
