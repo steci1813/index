@@ -1830,6 +1830,176 @@
       }
     }
 
+
+    /* MODAL RSVP SUPABASE */
+    .rsvp-modal{
+      position:fixed;
+      inset:0;
+      z-index:999999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background:rgba(4, 10, 22, .72);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .rsvp-modal.active{
+      display:flex;
+    }
+
+    .rsvp-modal-card{
+      width:min(560px, 100%);
+      max-height:min(88vh, 760px);
+      overflow:auto;
+      position:relative;
+      padding:30px;
+      border-radius:28px;
+      background:
+        linear-gradient(180deg, rgba(13, 32, 63, .94), rgba(7, 18, 36, .96));
+      border:1px solid rgba(242,223,174,.22);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.42),
+        0 0 42px rgba(216,177,90,.16);
+    }
+
+    .rsvp-modal-close{
+      position:absolute;
+      top:16px;
+      right:16px;
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#fff8e6;
+      font-size:1.25rem;
+      cursor:pointer;
+    }
+
+    .rsvp-modal-card h3{
+      font-family:"Cormorant Garamond", serif;
+      font-size:2.25rem;
+      color:#fff7e3;
+      margin-bottom:8px;
+      padding-right:40px;
+      line-height:1.05;
+    }
+
+    .rsvp-modal-card .rsvp-intro{
+      color:var(--muted);
+      line-height:1.7;
+      margin-bottom:22px;
+      font-size:.96rem;
+    }
+
+    .rsvp-form{
+      display:grid;
+      gap:14px;
+    }
+
+    .form-group{
+      display:grid;
+      gap:7px;
+    }
+
+    .form-group label{
+      color:#fff7e3;
+      font-weight:600;
+      font-size:.88rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.07);
+      color:#fff;
+      border-radius:16px;
+      padding:14px 15px;
+      outline:none;
+      font-family:"Montserrat", sans-serif;
+      font-size:.95rem;
+      transition:.25s ease;
+    }
+
+    .form-group select option{
+      color:#08152a;
+    }
+
+    .form-group textarea{
+      min-height:92px;
+      resize:vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus{
+      border-color:rgba(242,223,174,.65);
+      box-shadow:0 0 0 4px rgba(216,177,90,.10);
+    }
+
+    .rsvp-status{
+      display:none;
+      padding:12px 14px;
+      border-radius:16px;
+      line-height:1.55;
+      font-size:.92rem;
+    }
+
+    .rsvp-status.success{
+      display:block;
+      background:rgba(64, 190, 130, .14);
+      border:1px solid rgba(64, 190, 130, .35);
+      color:#dfffee;
+    }
+
+    .rsvp-status.error{
+      display:block;
+      background:rgba(255, 88, 88, .13);
+      border:1px solid rgba(255, 88, 88, .34);
+      color:#ffe1e1;
+    }
+
+    .rsvp-submit{
+      margin-top:6px;
+      border:none;
+      cursor:pointer;
+      width:100%;
+    }
+
+    .rsvp-submit:disabled{
+      opacity:.62;
+      cursor:not-allowed !important;
+      transform:none !important;
+    }
+
+    @media (max-width:640px){
+      .rsvp-modal{
+        padding:14px;
+        align-items:flex-end;
+      }
+
+      .rsvp-modal-card{
+        max-height:88vh;
+        padding:24px 18px 18px;
+        border-radius:26px 26px 18px 18px;
+      }
+
+      .rsvp-modal-card h3{
+        font-size:1.9rem;
+      }
+
+      .rsvp-modal-close{
+        top:12px;
+        right:12px;
+        width:38px;
+        height:38px;
+      }
+    }
+
   </style>
 </head>
 
@@ -2201,9 +2371,9 @@
           </div>
 
           <div class="cta-row" style="margin-top:18px;">
-            <a href="https://form.typeform.com/to/j8RYE30d?typeform-source=xn--stphane-portfolio-ctb.my.canva.site" class="btn btn-primary" data-i18n="confirm_btn">
-              Je confirme ma présence
-            </a>
+            <button type="button" class="btn btn-primary" id="openRsvpModal" data-i18n="confirm_btn">
+              Confirmer ma venue
+            </button>
           </div>
         </div>
 
@@ -2380,6 +2550,56 @@
     </div>
   </section>
 
+
+  <!-- MODAL RSVP SUPABASE -->
+  <div class="rsvp-modal" id="rsvpModal" aria-hidden="true">
+    <div class="rsvp-modal-card">
+      <button type="button" class="rsvp-modal-close" id="closeRsvpModal" aria-label="Fermer">×</button>
+
+      <h3 data-i18n="rsvp_modal_title">Confirmer ma venue</h3>
+
+      <p class="rsvp-intro" data-i18n="rsvp_modal_intro">
+        Remplissez ce petit formulaire pour confirmer votre présence au mariage.
+      </p>
+
+      <form class="rsvp-form" id="rsvpForm">
+        <div class="form-group">
+          <label for="guestName" data-i18n="rsvp_name_label">Nom et prénom</label>
+          <input type="text" id="guestName" name="nom" placeholder="Votre nom complet" required>
+        </div>
+
+        <div class="form-group">
+          <label for="guestPhone" data-i18n="rsvp_phone_label">Téléphone / WhatsApp</label>
+          <input type="tel" id="guestPhone" name="telephone" placeholder="+261..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="guestCount" data-i18n="rsvp_count_label">Nombre de personnes</label>
+          <select id="guestCount" name="nombre_invites" required>
+            <option value="1">1 personne</option>
+            <option value="2">2 personnes</option>
+            <option value="3">3 personnes</option>
+            <option value="4">4 personnes</option>
+            <option value="5">5 personnes</option>
+            <option value="6">6 personnes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="guestMessage" data-i18n="rsvp_message_label">Petit message, si vous voulez</label>
+          <textarea id="guestMessage" name="message" placeholder="Votre message..."></textarea>
+        </div>
+
+        <div class="rsvp-status" id="rsvpStatus"></div>
+
+        <button type="submit" class="btn btn-primary rsvp-submit" id="rsvpSubmit" data-i18n="rsvp_send_btn">
+          Envoyer ma confirmation
+        </button>
+      </form>
+    </div>
+  </div>
+
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
@@ -2517,7 +2737,17 @@
         confirm_title: "Confirme ta présence",
         confirm_text: "Merci de nous répondre avant le <strong>24 août 2026</strong>.",
         calendar_month: "AOÛT 2026",
-        confirm_btn: "Je confirme ma présence",
+        confirm_btn: "Confirmer ma venue",
+        rsvp_modal_title: "Confirmer ma venue",
+        rsvp_modal_intro: "Remplissez ce petit formulaire pour confirmer votre présence au mariage.",
+        rsvp_name_label: "Nom et prénom",
+        rsvp_phone_label: "Téléphone / WhatsApp",
+        rsvp_count_label: "Nombre de personnes",
+        rsvp_message_label: "Petit message, si vous voulez",
+        rsvp_send_btn: "Envoyer ma confirmation",
+        rsvp_success: "Merci, votre présence a bien été confirmée.",
+        rsvp_error: "Oups, l’envoi n’a pas fonctionné. Vérifiez la connexion ou la configuration Supabase.",
+        rsvp_loading: "Envoi en cours...",
         online_title: "Pour nos proches à distance",
         online_text_1: "Même à distance, nous serions ravis de vous savoir parmi nous pour cette journée si spéciale.",
         online_text_2: "Le lien de diffusion sera communiqué quelques jours avant le mariage.",
@@ -2601,7 +2831,17 @@
         confirm_title: "Hamafiso ny fahatongavanao",
         confirm_text: "Azafady valio izahay alohan’ny <strong>24 Aogositra 2026</strong>.",
         calendar_month: "AOGOSITRA 2026",
-        confirm_btn: "Manamafy ny fahatongavako",
+        confirm_btn: "Hanamafy ny fahatongavako",
+        rsvp_modal_title: "Hanamafy ny fahatongavako",
+        rsvp_modal_intro: "Fenoy ity formulaire kely ity hanamafisana ny fahatongavanao amin’ny mariazy.",
+        rsvp_name_label: "Anarana sy fanampiny",
+        rsvp_phone_label: "Téléphone / WhatsApp",
+        rsvp_count_label: "Isan’ny olona",
+        rsvp_message_label: "Hafatra kely, raha misy",
+        rsvp_send_btn: "Handefa fanamafisana",
+        rsvp_success: "Misaotra, voaray tsara ny fanamafisana ny fahatongavanao.",
+        rsvp_error: "Nisy olana ny fandefasana. Hamarino ny connexion na ny configuration Supabase.",
+        rsvp_loading: "Mandefa...",
         online_title: "Ho an’ireo havana sy namana lavitra",
         online_text_1: "Na dia lavitra aza ianareo, faly izahay raha afaka miaraka aminay amin’ity andro manokana ity.",
         online_text_2: "Hampitaina andro vitsivitsy mialoha ny mariazy ny rohy hijerena an-tserasera.",
@@ -2764,5 +3004,116 @@
     }
   </script>
 
+
+  <script>
+    /* RSVP SUPABASE */
+    const SUPABASE_URL = "https://ohpveoitjsaajrgyrqdj.supabase.co/";
+    const SUPABASE_ANON_KEY = "sb_publishable_Eg-oHfnwavJMJLPvzZdtRg_-4lN5zZe";
+    const RSVP_TABLE = "rsvp_invites";
+
+    const openRsvpModal = document.getElementById("openRsvpModal");
+    const closeRsvpModal = document.getElementById("closeRsvpModal");
+    const rsvpModal = document.getElementById("rsvpModal");
+    const rsvpForm = document.getElementById("rsvpForm");
+    const rsvpStatus = document.getElementById("rsvpStatus");
+    const rsvpSubmit = document.getElementById("rsvpSubmit");
+
+    function getCurrentLang(){
+      return localStorage.getItem("inviteLang") || document.documentElement.lang || "fr";
+    }
+
+    function t(key){
+      const lang = getCurrentLang() === "mg" ? "mg" : "fr";
+      return translations?.[lang]?.[key] || key;
+    }
+
+    function showRsvpModal(){
+      if(!rsvpModal) return;
+      rsvpModal.classList.add("active");
+      rsvpModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => document.getElementById("guestName")?.focus(), 120);
+    }
+
+    function hideRsvpModal(){
+      if(!rsvpModal) return;
+      rsvpModal.classList.remove("active");
+      rsvpModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    openRsvpModal?.addEventListener("click", showRsvpModal);
+    closeRsvpModal?.addEventListener("click", hideRsvpModal);
+
+    rsvpModal?.addEventListener("click", (e) => {
+      if(e.target === rsvpModal) hideRsvpModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") hideRsvpModal();
+    });
+
+    function setRsvpStatus(type, message){
+      if(!rsvpStatus) return;
+      rsvpStatus.className = "rsvp-status " + type;
+      rsvpStatus.textContent = message;
+    }
+
+    rsvpForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const currentLang = getCurrentLang() === "mg" ? "mg" : "fr";
+
+      const payload = {
+        nom: document.getElementById("guestName").value.trim(),
+        telephone: document.getElementById("guestPhone").value.trim(),
+        nombre_invites: Number(document.getElementById("guestCount").value),
+        message: document.getElementById("guestMessage").value.trim(),
+        presence: "oui",
+        langue: currentLang
+      };
+
+      if(!payload.nom || !payload.telephone){
+        setRsvpStatus("error", currentLang === "mg" ? "Fenoy azafady ny anarana sy téléphone." : "Merci de remplir le nom et le téléphone.");
+        return;
+      }
+
+      if(SUPABASE_URL.includes("TON-PROJET") || SUPABASE_ANON_KEY.includes("TA_CLE")){
+        setRsvpStatus("error", "Supabase n’est pas encore configuré : remplace SUPABASE_URL et SUPABASE_ANON_KEY dans le code.");
+        return;
+      }
+
+      try{
+        rsvpSubmit.disabled = true;
+        rsvpSubmit.textContent = t("rsvp_loading");
+        setRsvpStatus("", "");
+
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${RSVP_TABLE}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if(!response.ok){
+          throw new Error("Supabase error");
+        }
+
+        setRsvpStatus("success", t("rsvp_success"));
+        rsvpForm.reset();
+
+      }catch(error){
+        setRsvpStatus("error", t("rsvp_error"));
+      }finally{
+        rsvpSubmit.disabled = false;
+        rsvpSubmit.textContent = t("rsvp_send_btn");
+      }
+    });
+  </script>
+
 </body>
-</html>
+</html
