@@ -1743,10 +1743,102 @@
       }
     }
 
+
+    /* CURSEUR FÉÉRIQUE - DESKTOP UNIQUEMENT */
+    @media (pointer:fine){
+      body,
+      a,
+      button,
+      .btn,
+      .lang-btn,
+      .menu-toggle,
+      .envelope-overlay{
+        cursor:none !important;
+      }
+
+      .magic-cursor,
+      .magic-cursor-dot{
+        position:fixed;
+        left:0;
+        top:0;
+        pointer-events:none;
+        z-index:1000000;
+        opacity:0;
+        transition:
+          opacity .25s ease,
+          width .22s ease,
+          height .22s ease,
+          border-color .22s ease,
+          background .22s ease,
+          box-shadow .22s ease;
+      }
+
+      .magic-cursor{
+        width:34px;
+        height:34px;
+        border-radius:50%;
+        border:1px solid rgba(242,223,174,.88);
+        box-shadow:
+          0 0 16px rgba(242,223,174,.42),
+          0 0 34px rgba(216,177,90,.24);
+        transform:translate(-50%, -50%);
+      }
+
+      .magic-cursor-dot{
+        width:6px;
+        height:6px;
+        border-radius:50%;
+        background:#f2dfae;
+        box-shadow:
+          0 0 10px rgba(242,223,174,.95),
+          0 0 22px rgba(216,177,90,.65);
+        transform:translate(-50%, -50%);
+      }
+
+      body.cursor-ready .magic-cursor,
+      body.cursor-ready .magic-cursor-dot{
+        opacity:1;
+      }
+
+      body.cursor-hover .magic-cursor{
+        width:54px;
+        height:54px;
+        border-color:rgba(255,255,255,.86);
+        background:rgba(242,223,174,.08);
+        box-shadow:
+          0 0 20px rgba(242,223,174,.55),
+          0 0 44px rgba(216,177,90,.35);
+      }
+
+      body.cursor-hover .magic-cursor-dot{
+        width:8px;
+        height:8px;
+        background:#ffffff;
+      }
+
+      body.cursor-click .magic-cursor{
+        width:24px;
+        height:24px;
+        background:rgba(242,223,174,.18);
+      }
+    }
+
+    @media (pointer:coarse){
+      .magic-cursor,
+      .magic-cursor-dot{
+        display:none !important;
+      }
+    }
+
   </style>
 </head>
 
 <body>
+
+  <!-- CURSEUR FÉÉRIQUE -->
+  <div class="magic-cursor" id="magicCursor"></div>
+  <div class="magic-cursor-dot" id="magicCursorDot"></div>
+
 
   <!-- ANIMATIONS FÉÉRIQUES -->
   <div class="fairy-particles" id="fairyParticles"></div>
@@ -2619,6 +2711,57 @@
       el.classList.add("reveal-fairy");
       fairyRevealObserver.observe(el);
     });
+  </script>
+
+
+  <script>
+    /* CURSEUR FÉÉRIQUE */
+    const magicCursor = document.getElementById("magicCursor");
+    const magicCursorDot = document.getElementById("magicCursorDot");
+
+    if(magicCursor && magicCursorDot && window.matchMedia("(pointer:fine)").matches){
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let cursorX = mouseX;
+      let cursorY = mouseY;
+
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        magicCursorDot.style.left = mouseX + "px";
+        magicCursorDot.style.top = mouseY + "px";
+
+        document.body.classList.add("cursor-ready");
+      });
+
+      function animateMagicCursor(){
+        cursorX += (mouseX - cursorX) * 0.16;
+        cursorY += (mouseY - cursorY) * 0.16;
+
+        magicCursor.style.left = cursorX + "px";
+        magicCursor.style.top = cursorY + "px";
+
+        requestAnimationFrame(animateMagicCursor);
+      }
+
+      animateMagicCursor();
+
+      const hoverTargets = "a, button, .btn, .lang-btn, .menu-toggle, .envelope-overlay, .glass-card";
+
+      document.querySelectorAll(hoverTargets).forEach(el => {
+        el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
+        el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
+      });
+
+      window.addEventListener("mousedown", () => {
+        document.body.classList.add("cursor-click");
+      });
+
+      window.addEventListener("mouseup", () => {
+        document.body.classList.remove("cursor-click");
+      });
+    }
   </script>
 
 </body>
